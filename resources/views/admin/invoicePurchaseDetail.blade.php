@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Purchase Invoice</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 <style>
     table,tr,th,td{
@@ -34,16 +35,7 @@
 </style>
 <body class="m-0 p-0">
     <div class="p-3 d-flex w-100 align-items-center">
-        <div><a class="back"href="/admin/invoice">Back</a></div>
-        <div>
-            <form action="/admin/invoice-purchase-detail/1" method="get">
-                <select name="cu" class="cu">
-                    <option value="riel">Riel(៛)</option>
-                    <option value="dollar">Dollar($)</option>
-                </select>
-                <button style="visibility: hidden" id="cu_su">sf</button>
-            </form>
-        </div>
+        <div><a class="back"href="/admin/invoice-purchase">Back</a></div>
         <div class="text-end w-100">
             <button class="btn btn-primary" onclick="print()">Print</button>
         </div>
@@ -70,6 +62,8 @@
           </tr>
           @php
               $i=1;
+              $subtotal = 0;
+              $total = 0;
           @endphp
           @foreach ($detail as $item)
               <tr>
@@ -81,24 +75,19 @@
                 <td>{{number_format($item->price,2)}} $</td>
                 <td class="text-end"><b>{{number_format($item->price * $item->quantity,2)}} $</b></td>
               </tr>
+              @php
+                  $subtotal += number_format($item->price * $item->quantity,2);
+              @endphp
           @endforeach
-          {{-- <tr > 
-            <th colspan="5" class="text-start">Subtotal:<br>Discount: <br>Tax:</th>
-            <td class="text-end"><b>{{number_format($detail[0]->subtotal)}}$ <br>{{$detail[0]->discount}}% <br>5%</b></td>
+          <tr > 
+            <th colspan="6" class="text-start">Subtotal:<br>Discount: <br>Tax:</th>
+            <td class="text-end"><b>{{$subtotal}}$<br>{{$detail[0]->discount}}% <br>5%</b></td>
           </tr>
           <tr>
-            <th colspan="5" class="text-start"><h3>Total:</h3></th>
-            <td class="text-end"><h3><b>{{number_format($detail[0]->amount)}}$</b></h3></td>
-          </tr> --}}
+            <th colspan="6" class="text-start"><h3>Total:</h3></th>
+            <td class="text-end"><h3><b>{{$subtotal + ($subtotal*0.05) - (($subtotal*$detail[0]->discount)/100)}} $</b></h3></td>
+          </tr>
         </table>
     </div>
-    <script>
-        $(document).ready(function(){
-            $('.cu').change(function(){
-                $('#cu_su').click();
-                // alert(123)
-            })
-        });
-    </script>
 </body>
 </html>

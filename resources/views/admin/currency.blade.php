@@ -10,7 +10,7 @@
         <div class="col-6 d-flex justify-content-around">
             <div><input type="number" class="border-2 border-dark rielMoney" name="riel" value="{{$exchange->riel}}" style="text-align:end"> <b>Riel(៛)</b></div>
             <div><h3><b>=</b></h3></div>
-            <div><input type="number" class="border-2 border-dark dollarMoney" name="dollar" value="{{$exchange->dollar}}" style="text-align:end"> <b>Dollar($)</b></div>
+            <div><input type="number" readonly class="border-2 border-dark dollarMoney" name="dollar" value="{{$exchange->dollar}}" style="text-align:end"> <b>Dollar($)</b></div>
         </div>
     </div>
     <table class="w-100 mt-3 table table-hover table-bordered text-center" style="table-layout: fixed">

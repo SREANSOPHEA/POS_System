@@ -103,7 +103,7 @@ class saleController extends Controller
         ->join('category','category.id','product.category')
         ->join('units','units.id','product.unit')
         ->where('purchase.id',$id)
-        ->select('purchase.id as ID','currency.name as currency','purchase.date as date','purchaseDetail.qty as quantity','product.name as product','supplier.name as supplier','users.name as buyer','category.name as category','units.name as unit','purchaseDetail.price as price')
+        ->select('purchase.id as ID','purchase.discount as discount','currency.name as currency','purchase.date as date','purchaseDetail.qty as quantity','product.name as product','supplier.name as supplier','users.name as buyer','category.name as category','units.name as unit','purchaseDetail.price as price')
         ->get();
         return view('admin.invoicePurchaseDetail',['detail'=>$detail]);
     }
