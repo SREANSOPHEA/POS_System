@@ -34,7 +34,7 @@
 </style>
 <body class="m-0 p-0">
     <div class="p-3 d-flex w-100 align-items-center">
-        <div><a class="back"href="/admin/invoice">Back</a></div>
+        <div><a class="back"href="/admin/invoice-sale">Back</a></div>
         <div class="text-end w-100">
             <button class="btn btn-primary" onclick="print()">Print</button>
         </div>
@@ -61,6 +61,7 @@
           </tr>
           @php
               $i=1;
+              $total = 0;
           @endphp
           @foreach ($detail as $item)
               <tr>
@@ -69,18 +70,26 @@
                 <td>{{$item->category}}</td>
                 <td>{{$item->unit}}</td>
                 <td>{{$item->quantity}}</td>
-                <td>{{number_format($item->price)}} {{$item->currency}}</td>
-                <td class="text-end"><b>{{number_format($item->price * $item->quantity)}} {{$item->currency}}</b></td>
+                @if ($item->currency == "Riel")
+                  <td>{{number_format($item->price/$exchange->riel,2)}} $</td>
+                  <td class="text-end"><b>{{number_format(($item->price/$exchange->riel) * $item->quantity,2)}} $</b></td>
+                @else
+                  <td>{{number_format($item->price,2)}} $</td>
+                  <td class="text-end"><b>{{number_format($item->price * $item->quantity,2)}} $</b></td>
+                @endif
+                @php
+                    if($item->currency == "Riel"){
+                      $total += number_format(($item->price/$exchange->riel) * $item->quantity,2);
+                    }else{
+                      $total += number_format($item->price * $item->quantity,2);
+                    }
+                @endphp
               </tr>
           @endforeach
-          {{-- <tr > 
-            <th colspan="5" class="text-start">Subtotal:<br>Discount: <br>Tax:</th>
-            <td class="text-end"><b>{{number_format($detail[0]->subtotal)}}$ <br>{{$detail[0]->discount}}% <br>5%</b></td>
-          </tr>
           <tr>
-            <th colspan="5" class="text-start"><h3>Total:</h3></th>
-            <td class="text-end"><h3><b>{{number_format($detail[0]->amount)}}$</b></h3></td>
-          </tr> --}}
+            <th colspan="6" class="text-start"><h3>Total:</h3></th>
+            <td class="text-end"><h3><b>{{number_format($total)}}$</b></h3></td>
+          </tr>
         </table>
     </div>
     

@@ -9,12 +9,17 @@ use Illuminate\Support\Facades\DB;
 class productController extends Controller
 {
     public function home(){
+        $currency     = DB::table('exchange')->first(); 
         $product      = DB::table('product')->count();
         $customer     = DB::table('customer')->count();
         $warning_stock= DB::table('stock')->where('qty','>',0)->where('qty','<=',10)->count();
         $bad_stock    = DB::table('stock')->where('qty',0)->count();
         $good_stock   = DB::table('stock')->where('qty','>',5)->count();
-        return view('admin.home',['product'=>$product,'customer'=>$customer,'bad'=>$bad_stock,'good'=>$good_stock,'warning'=>$warning_stock]);
+        $cost = DB::table('purchaseDetail')->select(DB::raw('SUM(qty * price) as cost'))->first();
+        $price = DB::table('saleDetail')->select(DB::raw('SUM(qty * price) as price'))->first();
+        $purchase = DB::table('purchase')->join('purchaseDetail','purchase.id','purchaseDetail.purchaseID')->select('purchase.id as ID',DB::raw('SUM(purchaseDetail.qty * purchaseDetail.price)+(SUM(purchaseDetail.qty * purchaseDetail.price)*0.05) as cost'))->groupBy('purchase.id')->get();
+        $sale = DB::table('sale')->join('saleDetail','sale.id','saleDetail.saleID')->select('sale.id as ID',DB::raw('SUM(saleDetail.qty * saleDetail.price) as price'))->groupBy('sale.id')->get();
+        return view('admin.home',['product'=>$product,'customer'=>$customer,'bad'=>$bad_stock,'good'=>$good_stock,'warning'=>$warning_stock,'currency'=>$currency,'cost'=>$cost,'price'=>$price,'purchase'=>$purchase,'sale'=>$sale]);
     }
 
     Public function product(){

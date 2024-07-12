@@ -22,36 +22,40 @@ class saleController extends Controller
             ->join('units','units.id','product.unit')
             ->select('product.*','units.name as unit','category.name as category','currency.name as currency')
             ->where('barcode',$data->barcode)->first();
+
+        $exchange = DB::table('exchange')->first();
         $id = $product->id;
         $barcode = $product->barcode;
         $currency = $product->currency;
         $name = $product->name;
-        $price = $product->price;
+        $price = number_format($product->price,2);
         $image = $product->image;
         $category = $product->category;
         $unit = $product->unit;
-        echo  "
-            <tr>
-                <td><input type='hidden' name='id[]' value='$id'>$id</td>
-                <td>$name</td>
-                <td>$category</td>
-                <td id='text_qty$barcode'><input type='hidden' name='qty[]' value='1'>1</td>
-                <td>$unit</td>
-                <td>".number_format($price)." $currency</td>
-                <td><img src='http://localhost:8000/images/$image'></td>
-                <td><button class='deleteBTN'>Remove</button></td>
-            </tr>
-        ";
+        if($currency == 'Riel'){
+            $price = number_format($product->price/$exchange->riel,2);
+        }
+            echo  "
+                <tr>
+                    <td><input type='hidden' name='id[]' value='$id'>$id</td>
+                    <td>$name</td>
+                    <td>$category</td>
+                    <td id='text_qty$barcode'><input type='hidden' name='qty[]' value='1'>1</td>
+                    <td>$unit</td>
+                    <td>$price $<input type='hidden' name='price[]' value='$price'></td>
+                    <td><img src='http://localhost:8000/images/$image'></td>
+                    <td><button class='deleteBTN'>Remove</button></td>
+                </tr>
+            ";
         // return $text;
     }
 
     public function SaleSubmit(Request $data){
-    
         try{
             DB::table('sale')->insert([
                 'customer' => $data->customer,
                 'seller'   => Auth::user()->id,
-                'date'     => now()
+                'date'     => now(),
             ]);
             $sale = DB::table('sale')->limit(1)->orderByDesc('id')->first();
                 for($i=0; $i<count($data->id); $i++){
@@ -59,11 +63,19 @@ class saleController extends Controller
                         'saleID'    => $sale->id,
                         'productID' => $data->id[$i],
                         'qty'       => $data->qty[$i],
-                        'discount'  => 0
+                        'price'     => $data->price[$i]
+                    ]);
+
+                    $stock = DB::table('stock')->where('productID',$data->id[$i])->first();
+                    $instock = $stock->qty;
+                    $newstock = $instock- $data->qty[$i];
+                    DB::table('stock')->where('productID',$data->id[$i])->update([
+                        'qty' => $newstock
                     ]);
                 }
-                return redirect('/admin/invoice');
+                return redirect('/admin/invoice-sale');
         }catch(Exception $ex){
+            // return $ex;
             return redirect('/admin/sale')->with('error','error');
         }
     }
@@ -90,7 +102,9 @@ class saleController extends Controller
         ->where('sale.id',$id)
         ->select('sale.id as ID','currency.name as currency','sale.date as date','saleDetail.qty as quantity','product.name as product','customer.name as customer','users.name as seller','category.name as category','units.name as unit','product.price as price')
         ->get();
-        return view('admin.invoiceDetail',['detail'=>$detail]);
+
+        $exchange = DB::table('exchange')->first();
+        return view('admin.invoiceDetail',['detail'=>$detail,'exchange'=>$exchange]);
     }
 
     public function invoicePurchaseDetail($id){

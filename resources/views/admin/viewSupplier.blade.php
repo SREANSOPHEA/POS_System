@@ -27,7 +27,7 @@
                         <div class="dropdown">
                             <div data-bs-toggle="dropdown" style="cursor: pointer" aria-expanded="false"><b>...</b></div>
                             <ul class="dropdown-menu dropdown-menu-arrow">
-                            <li><a class="dropdown-item text-warning" href="/admin/edit-product/{{$item->id}}"><i class="bi bi-pencil-square"></i>Edit</a></li>
+                            <li><a class="dropdown-item text-warning" href="/admin/edit-supplier/{{$item->id}}"><i class="bi bi-pencil-square"></i>Edit</a></li>
                             <li><a class="dropdown-item text-danger deleteSupplier" data-value="{{$item->id}}" data-bs-toggle="modal" data-bs-target="#deleteSupplier" style="cursor: pointer;"><i class="bi bi-trash-fill"></i>Delete</a></li>
                             </ul>
                         </div>

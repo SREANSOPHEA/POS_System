@@ -85,7 +85,7 @@
           </tr>
           <tr>
             <th colspan="6" class="text-start"><h3>Total:</h3></th>
-            <td class="text-end"><h3><b>{{$subtotal + ($subtotal*0.05) - (($subtotal*$detail[0]->discount)/100)}} $</b></h3></td>
+            <td class="text-end"><h3><b>{{number_format($subtotal + ($subtotal*0.05) - (($subtotal*$detail[0]->discount)/100),2)}} $</b></h3></td>
           </tr>
         </table>
     </div>

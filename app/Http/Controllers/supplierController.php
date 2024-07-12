@@ -95,4 +95,27 @@ class supplierController extends Controller
 
         }
     }
+
+    public function editSupplierSubmit($id,Request $data){
+        try{
+            $file = $data->file('image');
+            if(empty($file)){
+                $image = $data->old_image;
+            }else{
+                $image = $this->uploadImage($file);
+            }
+            DB::table('supplier')->where('id',$id)->update([
+                'name'    => $data->name,
+                'email'   => $data->email,
+                'phone'   => $data->phone,
+                'address' => $data->address,
+                'note'    => $data->note,
+                'photo'   => $image,
+            ]);
+            return redirect('admin/supplier')->with('edit','success');
+        }catch(Exception $ex){
+            return $ex;
+            return redirect('admin/supplier')->with('error','error');
+        }
+    }
 }

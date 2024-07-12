@@ -65,7 +65,8 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/admin/add-supplier-submit',[supplierController::class,'addSupplierSubmit']);
     Route::get('/admin/supplier-detail/{id}',[supplierController::class,'supplierDetail']);
     Route::get('/admin/delete-supplier/{id}',[supplierController::class,'deleteSupplier']);
-    Route::get('/admin/edit-product/{id}',[supplierController::class,'editSupplier']);
+    Route::get('/admin/edit-supplier/{id}',[supplierController::class,'editSupplier']);
+    Route::post('/admin/edit-supplier-submit/{id}',[supplierController::class,'editSupplierSubmit']);
     Route::get('/admin/purchase',[supplierController::class,'purchase']);
     Route::get('/admin/purchase/{id}',[supplierController::class,'addPurchase']);
     Route::post('/admin/purchase-submit/{id}',[supplierController::class,'addPurchaseSubmit']);
@@ -77,8 +78,9 @@ Route::middleware(['auth'])->group(function(){
 
     /* Invoice */
     Route::get('/admin/invoice-sale',[saleController::class,'invoiceSale']);
-    Route::get('/admin/invoice-sale-detail/{sup_id}',[saleController::class,'invoiceSaleDetail']);
+    Route::get('/admin/invoice-detail/{sup_id}',[saleController::class,'invoiceSaleDetail']);
     Route::get('/admin/invoice-purchase',[saleController::class,'invoicePurchase']);
     Route::get('/admin/invoice-purchase-detail/{sup_id}',[saleController::class,'invoicePurchaseDetail']);
+    // Route::get('admin/invoice-detail/{sup_id}',[saleController::class,'invoicePurchaseDetail']);
 
 });

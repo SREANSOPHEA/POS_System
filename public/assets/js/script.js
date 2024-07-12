@@ -76,6 +76,7 @@ function getBarcode(barcode){
     }
     return 0;
 }
+
 function deleteArr(index){
     code.splice(index,1);
     qty.splice(index,1);

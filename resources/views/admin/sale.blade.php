@@ -61,16 +61,19 @@
             });
         });
    </script>
-    <input type="text" id="barcode" class="border-2 border-dark m-2" name="barcode" autocomplete="off" placeholder="barcode...">
+     <input type="text" id="barcode" class="border-2 border-dark m-2 form-control " name="barcode" autocomplete="off" placeholder="barcode...">
     <form action="/admin/sale-sendsubmit" method="post" class="w-100">
         @csrf
-        <div class="d-flex m-2">
-            <select name="customer" class="form-select border-3 border-dark">
-                @foreach ($customer as $item)
+        <div class="d-flex m-2  justify-content-between">
+            <div class="w-25 d-flex align-items-center">
+                <label for="cus"><b>Customer</b></label>
+                <select name="customer" class="form-select border-dark border-2">
+                    @foreach ($customer as $item)
                     <option value="{{$item->id}}">{{$item->name}}</option>
-                @endforeach
-            </select>
-            <button class="btn btn-primary">Sale</button>
+                    @endforeach
+                </select>
+            </div>
+            <button class="btn btn-primary d-flex align-items-center"><i class="bi bi-cart4"></i>Sale</button>
         </div>
    <table>
         <tr>
